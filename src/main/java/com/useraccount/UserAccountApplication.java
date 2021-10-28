@@ -7,7 +7,11 @@ public class UserAccountApplication {
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
         Injector.startApplication(UserAccountApplication.class);
-        Injector.getService(UserAccountClientComponent.class).displayUserAccount();
+        try {
+            Injector.getService(UserAccountClientComponent.class).displayUserAccount();
+        } catch (NullPointerException e) {
+            throw new RuntimeException("Null pointer exception");
+        }
         long endime = System.currentTimeMillis();
     }
 }

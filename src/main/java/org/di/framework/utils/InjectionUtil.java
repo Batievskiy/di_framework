@@ -19,13 +19,13 @@ public class InjectionUtil {
     /**
      * Perform injection recursively, for each service inside the Client class
      */
-    public static void autowire(Injector injector, Class<?> classz, Object classInstance)
+    public static void autowire(Injector injector, Class<?> currentClass, Object classInstance)
             throws InstantiationException, IllegalAccessException {
         Collection<Field> fields = Fields.findAllAndMakeThemAccessible(
                 FieldCriteria.forEntireClassHierarchy().allThoseThatMatch(field ->
                         field.isAnnotationPresent(Autowired.class)
                 ),
-                classz
+                currentClass
         );
         for (Field field : fields) {
             String qualifier = field.isAnnotationPresent(Qualifier.class)

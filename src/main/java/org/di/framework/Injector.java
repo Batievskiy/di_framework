@@ -52,9 +52,9 @@ public class Injector {
         }
     }
 
-    public static <T> T getService(Class<T> classz) {
+    public static <T> T getService(Class<T> currentClass) {
         try {
-            return injector.getBeanInstance(classz);
+            return injector.getBeanInstance(currentClass);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,8 +67,8 @@ public class Injector {
     private void initFramework(Class<?> mainClass)
             throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
         Class<?>[] classes = getClasses(mainClass.getPackage().getName(), true);
-        ComponentContainer componentConatiner = ComponentContainer.getInstance();
-        ClassHunter classHunter = componentConatiner.getClassHunter();
+        ComponentContainer componentContainer = ComponentContainer.getInstance();
+        ClassHunter classHunter = componentContainer.getClassHunter();
         String packageRelPath = mainClass.getPackage().getName().replace(".", "/");
         try (ClassHunter.SearchResult result = classHunter.findBy(
                 SearchConfig.forResources(
@@ -83,17 +83,17 @@ public class Injector {
                 if (interfaces.length == 0) {
                     diMap.put(implementationClass, implementationClass);
                 } else {
-                    for (Class<?> iface : interfaces) {
-                        diMap.put(implementationClass, iface);
+                    for (Class<?> currentInterface : interfaces) {
+                        diMap.put(implementationClass, currentInterface);
                     }
                 }
             }
 
-            for (Class<?> classz : classes) {
-                if (classz.isAnnotationPresent(Component.class)) {
-                    Object classInstance = classz.newInstance();
-                    applicationScope.put(classz, classInstance);
-                    InjectionUtil.autowire(this, classz, classInstance);
+            for (Class<?> currentClass : classes) {
+                if (currentClass.isAnnotationPresent(Component.class)) {
+                    Object classInstance = currentClass.newInstance();
+                    applicationScope.put(currentClass, classInstance);
+                    InjectionUtil.autowire(this, currentClass, classInstance);
                 }
             }
         };
